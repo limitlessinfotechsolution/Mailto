@@ -1,0 +1,18 @@
+{
+  "name": "mailo-monorepo",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "smtp",
+    "imap",
+    "chat",
+    "admin-api",
+    "webmail",
+    "shared"
+  ],
+  "scripts": {
+    "dev": "echo 'Run dev scripts for specific workspaces'",
+    "build": "echo 'Run build scripts for specific workspaces'"
+  }
+}

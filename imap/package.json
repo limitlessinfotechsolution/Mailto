@@ -1,0 +1,21 @@
+{
+  "name": "@mailo/imap",
+  "version": "0.0.1",
+  "description": "IMAP Server for MailO",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "dependencies": {
+    "@mailo/shared": "*",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.3.1",
+    "imapflow": "^1.0.0",
+    "mongoose": "^8.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
