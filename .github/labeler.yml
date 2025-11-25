@@ -1,0 +1,36 @@
+webmail:
+  - changed-files:
+    - any-glob-to-any-file: 'webmail/**/*'
+
+backend:
+  - changed-files:
+    - any-glob-to-any-file: 'backend/**/*'
+
+docker:
+  - changed-files:
+    - any-glob-to-any-file: 
+      - '**/Dockerfile'
+      - 'docker-compose.yml'
+
+ci/cd:
+  - changed-files:
+    - any-glob-to-any-file: '.github/workflows/**/*'
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file: 
+      - '**/*.md'
+      - 'docs/**/*'
+
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/package.json'
+      - '**/package-lock.json'
+
+configuration:
+  - changed-files:
+    - any-glob-to-any-file:
+      - '**/*.config.js'
+      - '**/*.config.json'
+      - '.env.example'
