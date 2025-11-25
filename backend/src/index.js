@@ -3,14 +3,20 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { createServer } from 'http';
 import { User, Domain, Folder, Message, logger } from '@mailo/shared';
 import { auth } from './middleware/auth.js';
 import { initMailer } from './mailer.js';
+import { initSocket } from './socket.js';
 
 dotenv.config();
 
 const app = express();
+const httpServer = createServer(app);
 const PORT = process.env.PORT || 3000;
+
+// Initialize Socket.io
+initSocket(httpServer);
 
 // Initialize mailer
 initMailer();
@@ -132,6 +138,7 @@ import taskRoutes from './routes/tasks.js';
 import noteRoutes from './routes/notes.js';
 import campaignRoutes from './routes/campaigns.js';
 import twoFaRoutes from './routes/2fa.js';
+import messageRoutes from './routes/messages.js'; // Import message routes
 import { loadPlugins, triggerHook } from './plugins.js';
 
 // Load Plugins
@@ -149,6 +156,7 @@ app.use('/tasks', taskRoutes);
 app.use('/notes', noteRoutes);
 app.use('/campaigns', campaignRoutes);
 app.use('/2fa', twoFaRoutes);
+app.use('/messages', messageRoutes); // Use message routes
 app.use('/admin', adminRoutes);
 app.use('/attachments', attachmentRoutes);
 app.use('/auth', authRoutes);
@@ -186,7 +194,7 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/mailo')
   .then(() => console.log('MongoDB Connected'))
   .catch(err => console.error('MongoDB Connection Error:', err));
 
-app.listen(PORT, () => {
+httpServer.listen(PORT, () => {
   console.log(`Backend Server running on port ${PORT}`);
 });
 

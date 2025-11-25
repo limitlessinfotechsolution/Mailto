@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { sendMessage } from '../api';
-import { FiX, FiMinus, FiMaximize2, FiPaperclip, FiImage, FiSmile } from 'react-icons/fi';
+import { FiX, FiMinus, FiMaximize2, FiPaperclip, FiImage, FiSmile, FiClock, FiCalendar } from 'react-icons/fi';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import axios from 'axios';
 
-export default function Compose({ onClose, onSendSuccess, initialData = null }) {
+export default function Compose({ onClose, onSendSuccess, initialData = null, signature = '' }) {
   const [to, setTo] = useState('');
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
@@ -13,6 +13,8 @@ export default function Compose({ onClose, onSendSuccess, initialData = null }) 
   const [isMinimized, setIsMinimized] = useState(false);
   const [attachments, setAttachments] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [scheduledAt, setScheduledAt] = useState('');
+  const [showSchedule, setShowSchedule] = useState(false);
   const fileInputRef = useRef(null);
 
   // Populate fields when initialData is provided (for reply/forward)
@@ -36,8 +38,10 @@ export default function Compose({ onClose, onSendSuccess, initialData = null }) 
         `;
         setBody(quotedText);
       }
+    } else if (signature) {
+      setBody(`<br/><br/>${signature}`);
     }
-  }, [initialData]);
+  }, [initialData, signature]);
 
   const handleFileSelect = async (e) => {
     const files = Array.from(e.target.files);
@@ -74,17 +78,18 @@ export default function Compose({ onClose, onSendSuccess, initialData = null }) 
     e.preventDefault();
     setSending(true);
     try {
-      await sendMessage({ 
+      const res = await sendMessage({ 
         to, 
         subject, 
         text: body, 
         html: body,
+        scheduledAt: scheduledAt || null,
         attachments: attachments.map(att => ({
           filename: att.filename,
           path: att.path
         }))
       });
-      if (onSendSuccess) onSendSuccess();
+      if (onSendSuccess) onSendSuccess(res.data);
       onClose();
     } catch (err) {
       console.error(err);
@@ -186,7 +191,7 @@ export default function Compose({ onClose, onSendSuccess, initialData = null }) 
 
           {/* Footer */}
           <div className="p-4 border-t border-gray-200 bg-gray-50 flex justify-between items-center flex-shrink-0">
-            <div className="flex gap-4 text-gray-500">
+            <div className="flex gap-4 text-gray-500 items-center">
                <input 
                  type="file" 
                  ref={fileInputRef}
@@ -205,6 +210,51 @@ export default function Compose({ onClose, onSendSuccess, initialData = null }) 
                </button>
                <button type="button" className="hover:text-gray-700 p-2 rounded hover:bg-gray-200 transition"><FiImage size={20} /></button>
                <button type="button" className="hover:text-gray-700 p-2 rounded hover:bg-gray-200 transition"><FiSmile size={20} /></button>
+               
+               <div className="h-6 w-px bg-gray-300 mx-2"></div>
+               
+               <div className="relative flex items-center">
+                 <button 
+                   type="button" 
+                   onClick={() => setShowSchedule(!showSchedule)}
+                   className={`p-2 rounded transition flex items-center gap-2 ${showSchedule || scheduledAt ? 'text-blue-600 bg-blue-50' : 'hover:text-gray-700 hover:bg-gray-200'}`}
+                   title="Schedule Send"
+                 >
+                   <FiClock size={20} />
+                   {scheduledAt && <span className="text-xs font-medium">{new Date(scheduledAt).toLocaleString()}</span>}
+                 </button>
+                 
+                 {showSchedule && (
+                    <div className="absolute bottom-12 left-0 bg-white shadow-xl border border-gray-200 p-3 rounded-lg z-50 w-72">
+                      <h4 className="text-sm font-semibold mb-2 text-gray-700 flex items-center gap-2">
+                        <FiCalendar /> Schedule Send
+                      </h4>
+                      <input 
+                        type="datetime-local" 
+                        className="w-full border border-gray-300 rounded p-2 text-sm mb-2"
+                        value={scheduledAt}
+                        onChange={(e) => setScheduledAt(e.target.value)}
+                        min={new Date().toISOString().slice(0, 16)}
+                      />
+                      <div className="flex justify-end gap-2">
+                        <button 
+                          type="button" 
+                          onClick={() => { setScheduledAt(''); setShowSchedule(false); }}
+                          className="text-xs text-gray-500 hover:text-gray-700"
+                        >
+                          Clear
+                        </button>
+                        <button 
+                          type="button" 
+                          onClick={() => setShowSchedule(false)}
+                          className="text-xs bg-blue-600 text-white px-2 py-1 rounded"
+                        >
+                          Done
+                        </button>
+                      </div>
+                    </div>
+                 )}
+               </div>
             </div>
             <div className="flex gap-3">
               <button 
@@ -217,9 +267,9 @@ export default function Compose({ onClose, onSendSuccess, initialData = null }) 
               <button 
                 type="submit" 
                 disabled={sending || uploading}
-                className="px-6 py-2 bg-blue-600 text-white rounded shadow-sm hover:bg-blue-700 font-medium disabled:opacity-50"
+                className="px-6 py-2 bg-blue-600 text-white rounded shadow-sm hover:bg-blue-700 font-medium disabled:opacity-50 flex items-center gap-2"
               >
-                {sending ? 'Sending...' : uploading ? 'Uploading...' : 'Send'}
+                {sending ? 'Sending...' : uploading ? 'Uploading...' : scheduledAt ? 'Schedule Send' : 'Send'}
               </button>
             </div>
           </div>

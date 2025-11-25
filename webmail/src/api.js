@@ -13,9 +13,13 @@ export const setAuthToken = (token) => {
 };
 
 export const login = (email, password) => api.post('/auth/login', { email, password });
+export const getProfile = () => api.get('/auth/me');
+
 export const getFolders = () => api.get('/folders');
-export const getMessages = (folderId) => api.get(`/messages/${folderId}`);
-export const sendMessage = (data) => api.post('/send', data);
+export const getMessages = (folderId, params = {}) => api.get(`/messages/${folderId}`, { params });
+export const sendMessage = (data) => api.post('/messages/send', data);
+export const snoozeMessage = (id, snoozeUntil) => api.post(`/messages/${id}/snooze`, { snoozeUntil });
+export const undoEmail = (jobId) => api.post(`/messages/undo/${jobId}`);
 
 // Calendar
 export const getEvents = () => api.get('/calendar');
@@ -28,6 +32,8 @@ export const createContact = (data) => api.post('/contacts', data);
 // Tasks
 export const getTasks = () => api.get('/tasks');
 export const createTask = (data) => api.post('/tasks', data);
+export const updateTask = (id, data) => api.patch(`/tasks/${id}`, data);
+export const deleteTask = (id) => api.delete(`/tasks/${id}`);
 
 // Notes
 export const getNotes = () => api.get('/notes');

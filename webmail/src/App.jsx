@@ -1,9 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import Login from './Login';
-import { getFolders, getMessages } from './api';
+import { getFolders, getMessages, setAuthToken, snoozeMessage, getProfile, undoEmail } from './api';
+import { SocketProvider } from './context/SocketContext';
 import Calendar from './components/Calendar';
 import Contacts from './components/Contacts';
 import Tasks from './components/Tasks';
+import Notes from './components/Notes';
 import Campaigns from './components/Campaigns';
 import Compose from './components/Compose';
 import AdminPanel from './components/AdminPanel';
@@ -12,7 +14,8 @@ import {
   FiMail, FiCalendar, FiUsers, FiCheckSquare, FiFileText, 
   FiInbox, FiSend, FiTrash2, FiFolder, FiEdit, FiSearch, 
   FiRefreshCw, FiMoreHorizontal, FiMenu, FiStar, FiAlertCircle, 
-  FiLogOut, FiChevronLeft, FiChevronRight, FiSettings, FiShield
+  FiLogOut, FiChevronLeft, FiChevronRight, FiSettings, FiShield, FiClock,
+  FiMoon, FiSun, FiX
 } from 'react-icons/fi';
 import { IoMdMegaphone } from 'react-icons/io';
 
@@ -24,7 +27,32 @@ function App() {
   const [composeMode, setComposeMode] = useState('new'); // new, reply, replyAll, forward (for future UI differentiation)
   const [composeInitialData, setComposeInitialData] = useState(null);
 
-  const handleReply = () => {
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const savedUser = localStorage.getItem('user');
+    if (token) {
+      setAuthToken(token);
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+      }
+      
+      // Fetch fresh profile
+      getProfile().then(res => {
+        setUser(res.data);
+        localStorage.setItem('user', JSON.stringify(res.data));
+      }).catch(err => {
+        console.error('Failed to fetch profile', err);
+        if (err.response && err.response.status === 401) {
+           setUser(null);
+           localStorage.removeItem('token');
+           localStorage.removeItem('user');
+           setAuthToken(null);
+        }
+      });
+    }
+  }, []);
+
+  const handleReply = useCallback(() => {
     if (!selectedMessage) return;
     setComposeMode('reply');
     setComposeInitialData({
@@ -33,10 +61,10 @@ function App() {
       originalMessage: selectedMessage
     });
     setIsComposeOpen(true);
-  };
+  }, [selectedMessage]);
 
-  const handleReplyAll = () => {
-    if (!selectedMessage) return;
+  const handleReplyAll = useCallback(() => {
+    if (!selectedMessage || !user) return;
     const recipients = [selectedMessage.from.address];
     if (selectedMessage.to) {
       selectedMessage.to.forEach(recipient => {
@@ -52,9 +80,9 @@ function App() {
       originalMessage: selectedMessage
     });
     setIsComposeOpen(true);
-  };
+  }, [selectedMessage, user]);
 
-  const handleForward = () => {
+  const handleForward = useCallback(() => {
     if (!selectedMessage) return;
     setComposeMode('forward');
     setComposeInitialData({
@@ -63,26 +91,59 @@ function App() {
       originalMessage: selectedMessage
     });
     setIsComposeOpen(true);
-  };
+  }, [selectedMessage]);
 
-  const handleNewEmail = () => {
+  const handleNewEmail = useCallback(() => {
     setComposeMode('new');
     setComposeInitialData(null);
     setIsComposeOpen(true);
-  };
+  }, []);
 
-  const handleComposeClose = () => {
+  const handleComposeClose = useCallback(() => {
     setIsComposeOpen(false);
     setComposeMode('new');
     setComposeInitialData(null);
-  };
+  }, []);
   
   // Mail State
   const [folders, setFolders] = useState([]);
   const [messages, setMessages] = useState([]);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [selectedMessage, setSelectedMessage] = useState(null);
+  const [undoJobId, setUndoJobId] = useState(null);
+  const [showUndoToast, setShowUndoToast] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
+  const [showSnooze, setShowSnooze] = useState(false);
+  const [snoozeDate, setSnoozeDate] = useState('');
+
+  const handleSendSuccess = (data) => {
+    // If scheduled for later (> 1 min), don't show undo toast
+    if (data.scheduledAt && new Date(data.scheduledAt).getTime() - Date.now() > 60000) {
+      return;
+    }
+    
+    setUndoJobId(data.jobId);
+    setShowUndoToast(true);
+    
+    // Hide toast after 10s
+    setTimeout(() => {
+      setShowUndoToast(false);
+      setUndoJobId(null);
+    }, 10000);
+  };
+
+  const handleUndo = async () => {
+    if (!undoJobId) return;
+    try {
+      await undoEmail(undoJobId);
+      setShowUndoToast(false);
+      setUndoJobId(null);
+      // Re-open compose with previous data (would need to persist it, skipping for MVP)
+      alert('Sending cancelled');
+    } catch (err) {
+      console.error('Failed to undo:', err);
+    }
+  };
 
   const loadFolders = useCallback(async () => {
     try {
@@ -95,11 +156,92 @@ function App() {
     }
   }, []);
 
-  const loadMessages = useCallback(async (folderId) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
+  const searchInputRef = useRef(null);
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  };
+
+  const handleDeleteMessage = useCallback(async () => {
+    if (!selectedMessage) return;
+    if (!confirm('Are you sure you want to delete this message?')) return;
+    
+    setMessages(prev => prev.filter(m => m._id !== selectedMessage._id));
+    setSelectedMessage(null);
+  }, [selectedMessage]);
+
+  const handleSnooze = async () => {
+    if (!selectedMessage || !snoozeDate) return;
+    try {
+      await snoozeMessage(selectedMessage._id, snoozeDate);
+      setShowSnooze(false);
+      setSnoozeDate('');
+      setMessages(prev => prev.filter(m => m._id !== selectedMessage._id));
+      setSelectedMessage(null);
+    } catch (err) {
+      console.error('Failed to snooze message', err);
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      // Ignore if typing in an input
+      if (['INPUT', 'TEXTAREA'].includes(e.target.tagName) || e.target.isContentEditable) {
+        return;
+      }
+
+      if (e.key === 'c') {
+        e.preventDefault();
+        handleNewEmail();
+      } else if (e.key === 'r') {
+        e.preventDefault();
+        handleReply();
+      } else if (e.key === 'a') {
+        e.preventDefault();
+        handleReplyAll();
+      } else if (e.key === 'f') {
+        e.preventDefault();
+        handleForward();
+      } else if (e.key === '/') {
+        e.preventDefault();
+        searchInputRef.current?.focus();
+      } else if (e.key === 'Delete' || e.key === 'Backspace') {
+        if (selectedMessage) {
+           e.preventDefault();
+           handleDeleteMessage();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedMessage, handleNewEmail, handleReply, handleReplyAll, handleForward, handleDeleteMessage]);
+
+  const loadMessages = useCallback(async (folderId, query = '') => {
     if (!folderId) return;
     setLoadingMessages(true);
     try {
-      const res = await getMessages(folderId);
+      const params = {};
+      if (query) {
+        params.q = query;
+        setIsSearching(true);
+      } else {
+        setIsSearching(false);
+      }
+      
+      const res = await getMessages(folderId, params);
       setMessages(res.data);
       setSelectedMessage(null);
     } catch (err) {
@@ -108,6 +250,17 @@ function App() {
       setLoadingMessages(false);
     }
   }, []);
+
+  const handleSearch = (e) => {
+    if (e.key === 'Enter') {
+      loadMessages(selectedFolder?._id, searchQuery);
+    }
+  };
+
+  const clearSearch = () => {
+    setSearchQuery('');
+    loadMessages(selectedFolder?._id, '');
+  };
 
   useEffect(() => {
     if (user && currentView === 'mail') {
@@ -124,10 +277,10 @@ function App() {
   }, [user, currentView, loadFolders]);
 
   useEffect(() => {
-    if (selectedFolder && currentView === 'mail') {
+    if (selectedFolder && currentView === 'mail' && !isSearching) {
       loadMessages(selectedFolder._id);
     }
-  }, [selectedFolder, currentView, loadMessages]);
+  }, [selectedFolder, currentView, loadMessages, isSearching]);
 
   if (!user) {
     return <Login onLogin={setUser} />;
@@ -157,16 +310,20 @@ function App() {
         return (
           <div className="flex flex-1 h-full overflow-hidden">
             {/* Mail Sidebar (Folders) */}
-            <div className="w-56 bg-gray-50 border-r border-gray-200 flex flex-col flex-shrink-0">
+            <div className="w-56 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-700 flex flex-col flex-shrink-0 transition-colors duration-200">
               <div className="p-3 flex items-center justify-between">
                 <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">Folders</span>
-                <button className="text-gray-400 hover:text-gray-600"><FiRefreshCw size={12} onClick={loadFolders} /></button>
+                <button className="text-gray-400 hover:text-gray-600"><FiRefreshCw size={12} onClick={() => loadFolders()} /></button>
               </div>
               <nav className="flex-1 overflow-y-auto px-2 space-y-1">
                 {folders.map(folder => (
                   <div
                     key={folder._id}
-                    onClick={() => setSelectedFolder(folder)}
+                    onClick={() => {
+                      setSelectedFolder(folder);
+                      setSearchQuery('');
+                      setIsSearching(false);
+                    }}
                     className={`cursor-pointer px-3 py-2 text-sm rounded-md flex items-center transition-colors ${
                       selectedFolder?._id === folder._id 
                         ? 'bg-blue-100 text-blue-700 font-medium' 
@@ -181,12 +338,12 @@ function App() {
             </div>
 
             {/* Message List */}
-            <div className="w-80 bg-white border-r border-gray-200 flex flex-col flex-shrink-0">
+            <div className="w-80 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col flex-shrink-0 transition-colors duration-200">
               {/* Toolbar for Message List */}
               <div className="h-10 border-b border-gray-200 flex items-center px-3 bg-gray-50 justify-between">
                 <span className="font-semibold text-gray-700 truncate">{selectedFolder?.name}</span>
                 <div className="flex gap-2">
-                   <button className="text-gray-500 hover:text-gray-700" title="Refresh" onClick={() => selectedFolder && loadMessages(selectedFolder._id)}>
+                   <button className="text-gray-500 hover:text-gray-700" title="Refresh" onClick={() => selectedFolder && loadMessages(selectedFolder._id, searchQuery)}>
                      <FiRefreshCw size={14} className={loadingMessages ? 'animate-spin' : ''} />
                    </button>
                 </div>
@@ -197,10 +354,22 @@ function App() {
                 <div className="relative">
                   <FiSearch className="absolute left-2 top-2.5 text-gray-400" />
                   <input 
+                    ref={searchInputRef}
                     type="text" 
                     placeholder="Search..." 
-                    className="w-full pl-8 pr-2 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                    className="w-full pl-8 pr-8 py-1.5 text-sm border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={handleSearch}
                   />
+                  {searchQuery && (
+                    <button 
+                      onClick={clearSearch}
+                      className="absolute right-2 top-2.5 text-gray-400 hover:text-gray-600"
+                    >
+                      <span className="text-xs">✕</span>
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -240,7 +409,7 @@ function App() {
             </div>
 
             {/* Reading View */}
-            <div className="flex-1 bg-white flex flex-col min-w-0">
+            <div className="flex-1 bg-white dark:bg-gray-800 flex flex-col min-w-0 transition-colors duration-200">
               {/* Reading Pane Toolbar */}
               <div className="h-10 border-b border-gray-200 flex items-center px-4 bg-gray-50 gap-3">
                 <button 
@@ -254,7 +423,47 @@ function App() {
                 <button onClick={handleReplyAll} className="text-gray-600 hover:text-gray-900" title="Reply All" disabled={!selectedMessage}><FiUsers size={18} /></button>
                 <button onClick={handleForward} className="text-gray-600 hover:text-gray-900" title="Forward" disabled={!selectedMessage}><FiChevronRight size={18} /></button>
                 <div className="h-4 w-px bg-gray-300 mx-1"></div>
-                <button className="text-gray-600 hover:text-red-600" title="Delete" disabled={!selectedMessage}><FiTrash2 size={18} /></button>
+                <div className="relative">
+                  <button 
+                    onClick={() => setShowSnooze(!showSnooze)} 
+                    className={`text-gray-600 hover:text-gray-900 ${showSnooze ? 'text-blue-600' : ''}`} 
+                    title="Snooze" 
+                    disabled={!selectedMessage}
+                  >
+                    <FiClock size={18} />
+                  </button>
+                  {showSnooze && (
+                    <div className="absolute top-8 left-0 bg-white shadow-xl border border-gray-200 p-3 rounded-lg z-50 w-72">
+                      <h4 className="text-sm font-semibold mb-2 text-gray-700 flex items-center gap-2">
+                        <FiClock /> Snooze Until
+                      </h4>
+                      <input 
+                        type="datetime-local" 
+                        className="w-full border border-gray-300 rounded p-2 text-sm mb-2"
+                        value={snoozeDate}
+                        onChange={(e) => setSnoozeDate(e.target.value)}
+                        min={new Date().toISOString().slice(0, 16)}
+                      />
+                      <div className="flex justify-end gap-2">
+                        <button 
+                          onClick={() => setShowSnooze(false)}
+                          className="text-xs text-gray-500 hover:text-gray-700"
+                        >
+                          Cancel
+                        </button>
+                        <button 
+                          onClick={handleSnooze}
+                          className="text-xs bg-blue-600 text-white px-2 py-1 rounded"
+                          disabled={!snoozeDate}
+                        >
+                          Snooze
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <div className="h-4 w-px bg-gray-300 mx-1"></div>
+                <button onClick={handleDeleteMessage} className="text-gray-600 hover:text-red-600" title="Delete" disabled={!selectedMessage}><FiTrash2 size={18} /></button>
                 <div className="flex-1"></div>
                 <button className="text-gray-600 hover:text-gray-900" title="More"><FiMoreHorizontal size={18} /></button>
               </div>
@@ -305,72 +514,100 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100 font-sans">
-      {/* Main Navigation Sidebar */}
-      <div className="w-16 bg-[#1a202c] flex flex-col items-center py-4 gap-2 z-20 shadow-lg">
-        <div className="text-white font-bold text-2xl mb-6 tracking-tight">M</div>
+    <SocketProvider>
+      <div className="flex h-screen bg-gray-100 dark:bg-gray-900 font-sans relative transition-colors duration-200">
+        {/* Main Navigation Sidebar */}
+        <div className="w-16 bg-[#1a202c] flex flex-col items-center py-4 gap-2 z-20 shadow-lg">
+          <div className="text-white font-bold text-2xl mb-6 tracking-tight">M</div>
 
-        <NavButton icon={<FiMail />} label="Mail" active={currentView === 'mail'} onClick={() => setCurrentView('mail')} />
-        <NavButton icon={<FiCalendar />} label="Calendar" active={currentView === 'calendar'} onClick={() => setCurrentView('calendar')} />
-        <NavButton icon={<FiUsers />} label="Contacts" active={currentView === 'contacts'} onClick={() => setCurrentView('contacts')} />
-        <NavButton icon={<FiCheckSquare />} label="Tasks" active={currentView === 'tasks'} onClick={() => setCurrentView('tasks')} />
-        <NavButton icon={<FiFileText />} label="Notes" active={currentView === 'notes'} onClick={() => setCurrentView('notes')} />
-        <NavButton icon={<IoMdMegaphone />} label="Campaigns" active={currentView === 'campaigns'} onClick={() => setCurrentView('campaigns')} />
+          <NavButton icon={<FiMail />} label="Mail" active={currentView === 'mail'} onClick={() => setCurrentView('mail')} />
+          <NavButton icon={<FiCalendar />} label="Calendar" active={currentView === 'calendar'} onClick={() => setCurrentView('calendar')} />
+          <NavButton icon={<FiUsers />} label="Contacts" active={currentView === 'contacts'} onClick={() => setCurrentView('contacts')} />
+          <NavButton icon={<FiCheckSquare />} label="Tasks" active={currentView === 'tasks'} onClick={() => setCurrentView('tasks')} />
+          <NavButton icon={<FiFileText />} label="Notes" active={currentView === 'notes'} onClick={() => setCurrentView('notes')} />
+          <NavButton icon={<IoMdMegaphone />} label="Campaigns" active={currentView === 'campaigns'} onClick={() => setCurrentView('campaigns')} />
 
-        <div className="mt-auto flex flex-col gap-2">
-           {/* Admin Link (Only for admins) */}
-           {(user.role === 'super_admin' || user.role === 'domain_admin') && (
-             <NavButton icon={<FiShield />} label="Admin" active={currentView === 'admin'} onClick={() => setCurrentView('admin')} />
-           )}
-           <NavButton icon={<FiSettings />} label="Settings" active={currentView === 'settings'} onClick={() => setCurrentView('settings')} />
-           <button onClick={() => setUser(null)} className="w-10 h-10 rounded-xl flex items-center justify-center text-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all" title="Logout">
-             <FiLogOut />
-           </button>
-        </div>
-      </div>
-
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Top Header */}
-        <div className="bg-white border-b border-gray-200 h-14 flex items-center px-6 justify-between shadow-sm z-10">
-          <div className="flex items-center gap-4">
-            <h1 className="font-bold text-xl text-gray-800 capitalize flex items-center gap-2">
-              {currentView}
-            </h1>
-          </div>
-          
-          <div className="flex items-center gap-4">
-             <button 
-               onClick={() => setIsComposeOpen(true)}
-               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 shadow-sm transition-all"
-             >
-               <FiEdit /> New Email
+          <div className="mt-auto flex flex-col gap-2">
+             {/* Admin Link (Only for admins) */}
+             {(user.role === 'super_admin' || user.role === 'domain_admin') && (
+               <NavButton icon={<FiShield />} label="Admin" active={currentView === 'admin'} onClick={() => setCurrentView('admin')} />
+             )}
+             <NavButton icon={<FiSettings />} label="Settings" active={currentView === 'settings'} onClick={() => setCurrentView('settings')} />
+             
+             <button onClick={toggleTheme} className="w-10 h-10 rounded-xl flex items-center justify-center text-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all" title="Toggle Theme">
+               {theme === 'light' ? <FiMoon /> : <FiSun />}
              </button>
-             <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold border border-gray-300">
-               {user.email[0].toUpperCase()}
-             </div>
+
+             <button onClick={() => {
+               setUser(null);
+               localStorage.removeItem('token');
+               localStorage.removeItem('user');
+               setAuthToken(null);
+             }} className="w-10 h-10 rounded-xl flex items-center justify-center text-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all" title="Logout">
+               <FiLogOut />
+             </button>
           </div>
         </div>
 
-        <div className="flex-1 overflow-hidden relative">
-          {renderContent()}
-        </div>
-      </div>
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          {/* Top Header */}
+          <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 h-14 flex items-center px-6 justify-between shadow-sm z-10 transition-colors duration-200">
+            <div className="flex items-center gap-4">
+              <h1 className="font-bold text-xl text-gray-800 dark:text-white capitalize flex items-center gap-2">
+                {currentView}
+              </h1>
+            </div>
+            
+            <div className="flex items-center gap-4">
+               <button 
+                 onClick={() => setIsComposeOpen(true)}
+                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-2 shadow-sm transition-all"
+               >
+                 <FiEdit /> New Email
+               </button>
+               <div className="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-bold border border-gray-300">
+                 {user.email[0].toUpperCase()}
+               </div>
+            </div>
+          </div>
 
-      {isComposeOpen && (
-        <Compose 
-          onClose={handleComposeClose} 
-          initialData={composeInitialData}
-          onSendSuccess={() => {
-             // Optionally refresh sent folder if we were viewing it
-             if (selectedFolder?.name.toLowerCase() === 'sent') {
-               loadMessages(selectedFolder._id);
-             }
-             handleComposeClose();
-          }} 
-        />
-      )}
-    </div>
+          <div className="flex-1 overflow-hidden relative">
+            {renderContent()}
+          </div>
+        </div>
+
+        {isComposeOpen && (
+          <Compose 
+            onClose={handleComposeClose} 
+            initialData={composeInitialData}
+            signature={user?.signature}
+            onSendSuccess={(data) => {
+               // Optionally refresh sent folder if we were viewing it
+               if (selectedFolder?.name.toLowerCase() === 'sent') {
+                 loadMessages(selectedFolder._id);
+               }
+               handleSendSuccess(data);
+               handleComposeClose();
+            }} 
+          />
+        )}
+
+        {/* Undo Toast */}
+        {showUndoToast && (
+          <div className="fixed bottom-5 left-20 bg-gray-900 text-white px-4 py-3 rounded shadow-lg flex items-center gap-4 z-50 animate-fade-in-up">
+            <span>Message sent</span>
+            <button 
+              onClick={handleUndo}
+              className="text-blue-400 font-bold hover:text-blue-300 uppercase text-sm"
+            >
+              Undo
+            </button>
+            <button onClick={() => setShowUndoToast(false)} className="text-gray-500 hover:text-gray-300"><FiX /></button>
+          </div>
+        )}
+      </div>
+    </SocketProvider>
   );
 }
 

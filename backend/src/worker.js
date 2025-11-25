@@ -1,6 +1,6 @@
 import { Queue, Worker } from 'bullmq';
 import IORedis from 'ioredis';
-import { Campaign, logger } from '@mailo/shared';
+import { Campaign, Message, Folder, logger } from '@mailo/shared';
 
 // Redis Connection
 const connection = new IORedis({
@@ -14,6 +14,25 @@ export const emailQueue = new Queue('email-campaigns', { connection });
 
 // Worker to process jobs
 const worker = new Worker('email-campaigns', async (job) => {
+  // Handle Unsnooze
+  if (job.name === 'unsnooze-email') {
+    const { messageId, userId } = job.data;
+    try {
+      const inbox = await Folder.findOne({ user: userId, type: 'inbox' });
+      if (inbox) {
+        await Message.findByIdAndUpdate(messageId, { 
+          folder: inbox._id,
+          'flags.read': false 
+        });
+        logger.info(`Message ${messageId} unsnoozed to Inbox`);
+      }
+      return;
+    } catch (err) {
+      logger.error(`Failed to unsnooze message ${messageId}`, err);
+      throw err;
+    }
+
+  // Handle Campaigns (Existing Logic)
   const { campaignId, recipient } = job.data;
   
   try {
@@ -42,6 +61,7 @@ const worker = new Worker('email-campaigns', async (job) => {
     logger.error(`Failed to send to ${recipient}`, err);
     await Campaign.findByIdAndUpdate(campaignId, { $inc: { 'stats.failed': 1 } });
   }
+}
 }, { connection });
 
 worker.on('completed', job => {

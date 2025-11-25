@@ -11,6 +11,8 @@ export default function Login({ onLogin }) {
     try {
       const res = await login(email, password);
       setAuthToken(res.data.token);
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('user', JSON.stringify(res.data.user));
       onLogin(res.data.user);
     } catch {
       setError('Invalid credentials');

@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { getTasks, createTask } from '../api';
+import { getTasks, createTask, updateTask, deleteTask } from '../api';
+import { useSocket } from '../context/socket';
 import { FiPlus, FiTrash2, FiCheckSquare, FiSquare, FiRefreshCw, FiFilter } from 'react-icons/fi';
 
 export default function Tasks() {
@@ -7,6 +8,7 @@ export default function Tasks() {
   const [newTask, setNewTask] = useState({ title: '' });
   const [loading, setLoading] = useState(false);
   const [showCompleted, setShowCompleted] = useState(false);
+  const socket = useSocket();
 
   const loadTasks = useCallback(async () => {
     setLoading(true);
@@ -24,27 +26,63 @@ export default function Tasks() {
     loadTasks();
   }, [loadTasks]);
 
+  // Real-time updates
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleCreated = (task) => {
+      setTasks(prev => [task, ...prev]);
+    };
+
+    const handleUpdated = (updatedTask) => {
+      setTasks(prev => prev.map(t => t._id === updatedTask._id ? updatedTask : t));
+    };
+
+    const handleDeleted = (taskId) => {
+      setTasks(prev => prev.filter(t => t._id !== taskId));
+    };
+
+    socket.on('task:created', handleCreated);
+    socket.on('task:updated', handleUpdated);
+    socket.on('task:deleted', handleDeleted);
+
+    return () => {
+      socket.off('task:created', handleCreated);
+      socket.off('task:updated', handleUpdated);
+      socket.off('task:deleted', handleDeleted);
+    };
+  }, [socket]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!newTask.title.trim()) return;
     try {
       await createTask(newTask);
       setNewTask({ title: '' });
-      loadTasks();
+      // No need to reload, socket will handle it
     } catch (err) {
       console.error(err);
     }
   };
 
   const toggleTaskStatus = async (task) => {
-    // Optimistic update
-    const updatedTasks = tasks.map(t => 
-      t._id === task._id ? { ...t, status: t.status === 'completed' ? 'pending' : 'completed' } : t
-    );
-    setTasks(updatedTasks);
+    try {
+      const newStatus = task.status === 'completed' ? 'pending' : 'completed';
+      await updateTask(task._id, { status: newStatus });
+      // Socket will update the UI
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-    // In a real app, we would call an API to update status
-    // await updateTask(task._id, { status: ... });
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this task?')) return;
+    try {
+      await deleteTask(id);
+      // Socket will update the UI
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const filteredTasks = tasks.filter(t => showCompleted || t.status !== 'completed');
@@ -120,7 +158,10 @@ export default function Tasks() {
                   {task.title}
                 </span>
 
-                <button className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button 
+                  onClick={() => handleDelete(task._id)}
+                  className="text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                >
                   <FiTrash2 />
                 </button>
               </div>

@@ -276,12 +276,26 @@ export default function Settings() {
                   <FiEdit3 /> Email Signature
                 </h3>
                 <p className="text-sm text-gray-600 mb-4">This signature will be automatically appended to all your outgoing emails.</p>
-                <textarea
-                  className="w-full border border-gray-300 rounded p-3 h-48 focus:ring-2 focus:ring-blue-500 outline-none font-sans"
-                  value={signature}
-                  onChange={e => setSignature(e.target.value)}
-                  placeholder="Best regards,&#10;Your Name&#10;Your Title&#10;Company Name"
-                />
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+
+// ... (inside component)
+                <div className="h-64 mb-12">
+                  <ReactQuill 
+                    theme="snow"
+                    value={signature}
+                    onChange={setSignature}
+                    className="h-48"
+                    modules={{
+                      toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ 'color': [] }, { 'background': [] }],
+                        ['link', 'image'],
+                        ['clean']
+                      ],
+                    }}
+                  />
+                </div>
                 <div className="mt-4 flex justify-end">
                   <button
                     onClick={handleSaveSignature}
