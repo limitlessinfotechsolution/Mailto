@@ -9,8 +9,8 @@ export const SocketProvider = ({ children }) => {
 
     if (token && user._id) {
       // Initialize socket connection
-      // In production, use the actual backend URL
-      const backendUrl = 'http://localhost:3000'; 
+      // Use relative path in production (proxied by Nginx), or localhost in dev
+      const backendUrl = import.meta.env.PROD ? '/' : 'http://localhost:3000'; 
       
       const newSocket = io(backendUrl, {
         transports: ['websocket'],

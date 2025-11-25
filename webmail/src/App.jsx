@@ -33,7 +33,12 @@ function App() {
     if (token) {
       setAuthToken(token);
       if (savedUser) {
-        setUser(JSON.parse(savedUser));
+        try {
+          setUser(JSON.parse(savedUser));
+        } catch (e) {
+          console.error('Failed to parse saved user', e);
+          localStorage.removeItem('user');
+        }
       }
       
       // Fetch fresh profile
