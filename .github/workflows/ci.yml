@@ -50,7 +50,7 @@ jobs:
       run: npm run build -w webmail
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v5
       with:
         name: webmail-dist
         path: webmail/dist/
