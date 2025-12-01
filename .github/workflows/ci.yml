@@ -68,7 +68,7 @@ jobs:
       uses: docker/setup-buildx-action@v2
 
     - name: Build Webmail Image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v6
       with:
         context: ./webmail
         push: false
@@ -77,7 +77,7 @@ jobs:
         cache-to: type=gha,mode=max
 
     - name: Build Backend Image
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v6
       with:
         context: ./backend
         push: false

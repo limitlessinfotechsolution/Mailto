@@ -37,7 +37,7 @@ jobs:
           type=sha
 
     - name: Build and push Webmail
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v6
       with:
         context: ./webmail
         push: true
@@ -46,7 +46,7 @@ jobs:
         cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/mailo-webmail:buildcache,mode=max
 
     - name: Build and push Backend
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v6
       with:
         context: ./backend
         push: true
