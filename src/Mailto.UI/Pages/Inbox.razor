@@ -1,0 +1,91 @@
+@page "/inbox"
+@page "/"
+@using Mailto.UI.Components
+@layout Mailto.UI.Components.Layout.MainLayout
+
+<div class="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark font-display antialiased">
+    <!-- Message List Pane -->
+    <main class="w-80 md:w-96 flex flex-col bg-white dark:bg-surface-dark border-r border-slate-200 dark:border-border-dark overflow-hidden">
+        <header class="p-4 border-b border-slate-200 dark:border-border-dark flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+                <h1 class="text-xl font-bold text-slate-900 dark:text-white">Inbox</h1>
+                <button class="material-icons text-slate-400">filter_list</button>
+            </div>
+            <div class="relative">
+                <span class="material-icons absolute left-3 top-2 text-slate-400 text-lg">search</span>
+                <input class="w-full bg-slate-100 dark:bg-background-dark border-transparent rounded-lg pl-10 py-2 text-sm focus:ring-1 focus:ring-primary focus:border-transparent outline-none" placeholder="Search mail..." type="text" />
+            </div>
+        </header>
+        <div class="flex-1 overflow-y-auto scrollbar-hide">
+            <!-- Unread Message -->
+            <div class="p-4 border-b border-slate-100 dark:border-border-dark bg-primary/5 border-l-4 border-primary cursor-pointer hover:bg-primary/10 transition-colors" @onclick="() => SelectEmail(1)">
+                <div class="flex justify-between items-start mb-1">
+                    <span class="font-bold text-sm text-slate-900 dark:text-white">Sarah Jenkins</span>
+                    <span class="text-[11px] text-primary font-semibold uppercase">12:45 PM</span>
+                </div>
+                <p class="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">Q3 Quarterly Review - Performance Metrics</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 mt-1">Hey team, I've attached the latest metrics for our Q3 review. Please take a look at the conversion rates...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Reading Pane -->
+    <section class="flex-1 flex flex-col bg-background-light dark:bg-background-dark overflow-hidden relative min-w-0">
+        <header class="h-16 border-b border-slate-200 dark:border-border-dark flex items-center justify-between px-6 bg-white/80 dark:bg-background-dark/50 backdrop-blur-md">
+            <div class="flex gap-4">
+                <button class="p-2 hover:bg-slate-200 dark:hover:bg-border-dark rounded-lg transition-colors text-slate-500"><span class="material-icons">archive</span></button>
+                <button class="p-2 hover:bg-slate-200 dark:hover:bg-border-dark rounded-lg transition-colors text-slate-500"><span class="material-icons">delete</span></button>
+                <div class="w-px h-6 bg-slate-200 dark:bg-border-dark self-center"></div>
+                <button class="p-2 hover:bg-slate-200 dark:hover:bg-border-dark rounded-lg transition-colors text-slate-500"><span class="material-icons">reply</span></button>
+            </div>
+        </header>
+
+        <article class="flex-1 overflow-y-auto p-10 max-w-4xl mx-auto w-full">
+            @if (selectedEmailId == 1)
+            {
+                <div class="mb-8">
+                    <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white mb-6">Q3 Quarterly Review - Performance Metrics</h2>
+                    <div class="flex items-center gap-4">
+                        <img class="w-12 h-12 rounded-full ring-2 ring-primary/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIjjpDvtoInFF8KeiPKA4KKUhHVbzc5Ph1FCzVdy_jGFuJHyBPnCUkh68Mw9I2ckQbVGhgMDSGCvvyRDB5CvdhpupxYbMXhhkD2roZg1y60p0JxUcDqv1rm5ObHCVd8RMFhV2jq10cSXnU_c_lJPXsqlZXU2JxCtV89Aluzk7eC-kWUVpuQn-pHo5mk2wx6twTXipT5DKVuiwE-ZWZx2TtnQ0PgYBDPqqBwiBzLZS6IbmIcGmk5kvKzgDqv8oR2277xVOl4asYlmv7" />
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <h3 class="font-bold text-slate-900 dark:text-white">Sarah Jenkins <span class="text-slate-500 font-normal">&lt;s.jenkins@mailto.io&gt;</span></h3>
+                                <span class="text-xs text-slate-500">Today, 12:45 PM</span>
+                            </div>
+                            <p class="text-xs text-slate-500">To: Alex Rivera, Product Marketing Team</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-slate-700 dark:text-slate-300 leading-relaxed space-y-4 prose dark:prose-invert">
+                    <p>Hi Alex,</p>
+                    <p>I hope your week is going well. As discussed in our last sync, I've finalized the performance metrics report for the Q3 quarterly review.</p>
+                    <p>We've seen some exceptional growth in our multi-tenant collaboration vertical, specifically with the new Mailto dashboard features.</p>
+                    <p>Best regards,<br/>Sarah</p>
+                </div>
+            }
+            else
+            {
+                <div class="h-full flex items-center justify-center text-slate-400">Select an email to read</div>
+            }
+        </article>
+    </section>
+</div>
+
+<!-- Floating Action Button -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 transition-transform z-40" @onclick="OpenCompose">
+    <span class="material-icons text-2xl">edit</span>
+</button>
+
+@if (isComposeOpen)
+{
+    <ComposeModal OnClose="CloseCompose" />
+}
+
+@code {
+    private int selectedEmailId = 0;
+    private bool isComposeOpen = false;
+
+    private void SelectEmail(int id) => selectedEmailId = id;
+    private void OpenCompose() => isComposeOpen = true;
+    private void CloseCompose() => isComposeOpen = false;
+}

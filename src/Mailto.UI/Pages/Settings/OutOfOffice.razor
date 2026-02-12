@@ -1,0 +1,41 @@
+@page "/settings/out-of-office"
+
+<div class="bg-background-light dark:bg-background-dark font-display text-slate-800 dark:text-slate-100 min-h-screen flex items-center justify-center p-4 antialiased">
+    <div class="w-full max-w-4xl h-[800px] bg-white dark:bg-slate-900 rounded-xl shadow-2xl overflow-hidden flex flex-col md:flex-row border border-slate-200 dark:border-slate-800">
+        <aside class="w-full md:w-64 bg-slate-50 dark:bg-black/20 border-r border-slate-200 dark:border-slate-800 flex flex-col hidden md:flex">
+            <nav class="flex-1 overflow-y-auto px-2 space-y-0.5 mt-10">
+                <a class="flex items-center px-3 py-1.5 text-sm font-medium bg-primary text-white rounded-lg shadow-sm" href="/settings/out-of-office">
+                    <span class="material-icons text-[18px] mr-3">flight_takeoff</span> Out of Office
+                </a>
+                <a class="flex items-center px-3 py-1.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 rounded-lg" href="/settings/profile">
+                    <span class="material-icons text-[18px] mr-3">account_circle</span> Profile
+                </a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 flex flex-col overflow-hidden relative">
+            <header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex justify-between items-center">
+                <h1 class="text-xl font-bold">Out of Office</h1>
+                <button class="px-4 py-1.5 text-sm font-medium text-white bg-primary rounded-lg shadow-sm hover:bg-blue-600 transition-all">Save Changes</button>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-6 md:p-8 space-y-8">
+                <section class="max-w-2xl mx-auto">
+                    <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5 flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-base font-semibold">Automatic Reply</span>
+                            <span class="text-sm text-slate-500">Send automated responses to incoming emails</span>
+                        </div>
+                        <div class="w-11 h-6 bg-slate-200 rounded-full relative">
+                            <div class="absolute right-1 top-1 w-4 h-4 bg-primary rounded-full"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="max-w-2xl mx-auto">
+                    <textarea class="w-full h-40 p-4 bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-xl focus:ring-primary focus:border-primary text-sm leading-relaxed" placeholder="Type your message here..."></textarea>
+                </section>
+            </div>
+        </main>
+    </div>
+</div>

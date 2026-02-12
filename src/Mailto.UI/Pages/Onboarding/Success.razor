@@ -1,0 +1,98 @@
+@page "/onboarding/success"
+@layout Mailto.UI.Components.Layout.EmptyLayout
+
+<div class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-white min-h-screen flex flex-col relative overflow-hidden ambient-bg">
+    <!-- Background Decorative Elements (Abstract macOS vibe) -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div class="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] bg-primary/20 rounded-full blur-[120px] opacity-40 mix-blend-screen animate-pulse"></div>
+        <div class="absolute bottom-[-10%] right-[-5%] w-[50%] h-[50%] bg-indigo-500/10 rounded-full blur-[100px] opacity-30 mix-blend-screen"></div>
+    </div>
+    <!-- Main Content Container -->
+    <main class="flex-grow flex items-center justify-center p-6 relative z-10">
+        <div class="bg-slate-900/40 backdrop-blur-2xl border border-white/10 w-full max-w-5xl rounded-2xl p-8 md:p-16 flex flex-col items-center text-center shadow-2xl">
+            <!-- Success Icon -->
+            <div class="mb-8 relative group cursor-default">
+                <div class="absolute inset-0 bg-primary/30 rounded-full blur-xl scale-75 group-hover:scale-100 transition-transform duration-700"></div>
+                <div class="relative w-24 h-24 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-primary/30">
+                    <span class="material-icons text-white text-5xl">check_circle</span>
+                </div>
+            </div>
+            <!-- Headline -->
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4 text-white">
+                You're All Set!
+            </h1>
+            <p class="text-lg text-gray-400 max-w-2xl mb-12 font-medium">
+                The <span class="text-white font-semibold">Acme Corp</span> environment has been successfully provisioned. Your secure workspace is ready for action.
+            </p>
+            <!-- Cards Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-12">
+                <!-- Card 1: Add Users -->
+                <div class="bg-white/5 border border-white/5 rounded-xl p-6 flex flex-col items-start text-left group hover:bg-white/10 hover:border-white/10 transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-12 h-12 rounded-lg bg-gray-800 flex items-center justify-center mb-4 text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                        <span class="material-icons">group_add</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-white">Add Your First User</h3>
+                    <p class="text-sm text-gray-400 mb-6 flex-grow">Invite team members to start collaborating securely in your new environment.</p>
+                    <button class="w-full py-2.5 px-4 rounded-lg border border-gray-700 hover:border-gray-500 bg-transparent text-white text-sm font-medium transition-colors hover:bg-white/5 flex items-center justify-center gap-2">
+                        <span>Invite Users</span>
+                    </button>
+                </div>
+                <!-- Card 2: Customize Brand -->
+                <div class="bg-white/5 border border-white/5 rounded-xl p-6 flex flex-col items-start text-left group hover:bg-white/10 hover:border-white/10 transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="w-12 h-12 rounded-lg bg-gray-800 flex items-center justify-center mb-4 text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                        <span class="material-icons">palette</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-white">Customize Your Brand</h3>
+                    <p class="text-sm text-gray-400 mb-6 flex-grow">Make Mailto feel like home by uploading your company logo and setting themes.</p>
+                    <button class="w-full py-2.5 px-4 rounded-lg border border-gray-700 hover:border-gray-500 bg-transparent text-white text-sm font-medium transition-colors hover:bg-white/5 flex items-center justify-center gap-2">
+                        <span>Open Settings</span>
+                    </button>
+                </div>
+                <!-- Card 3: Go to Inbox (Primary Action) -->
+                <div class="bg-white/5 border border-primary/30 rounded-xl p-6 flex flex-col items-start text-left group hover:bg-white/10 hover:border-primary/50 transition-all duration-300 transform hover:-translate-y-1 relative overflow-hidden">
+                    <!-- Subtle highlight for primary card -->
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-primary/10 blur-2xl rounded-full -mr-10 -mt-10 pointer-events-none"></div>
+                    <div class="w-12 h-12 rounded-lg bg-primary/20 flex items-center justify-center mb-4 text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-300">
+                        <span class="material-icons">mail</span>
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2 text-white">Go to Inbox</h3>
+                    <p class="text-sm text-gray-400 mb-6 flex-grow">Jump straight into your workspace and start sending secure emails.</p>
+                    <button @onclick="LaunchMailto" class="w-full py-2.5 px-4 bg-primary hover:bg-blue-600 text-white shadow-lg shadow-primary/25 text-sm font-medium transition-all transform active:scale-95 flex items-center justify-center gap-2">
+                        <span>Launch Mailto</span>
+                        <span class="material-icons text-sm">arrow_forward</span>
+                    </button>
+                </div>
+            </div>
+            <!-- Footer Links -->
+            <div class="flex items-center gap-6 text-sm text-gray-500">
+                <a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+                    <span class="material-icons text-base">description</span>
+                    View Documentation
+                </a>
+                <span class="w-1 h-1 rounded-full bg-gray-700"></span>
+                <a class="hover:text-primary transition-colors flex items-center gap-1" href="#">
+                    <span class="material-icons text-base">help_outline</span>
+                    Contact Support
+                </a>
+            </div>
+        </div>
+        <!-- Floating subtle indicator bottom right -->
+        <div class="fixed bottom-6 right-6 flex items-center gap-3 bg-gray-900/80 backdrop-blur-md border border-gray-800 px-4 py-2 rounded-full shadow-2xl z-50">
+            <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span class="text-xs font-medium text-gray-400">System Operational</span>
+        </div>
+    </main>
+</div>
+
+<style>
+    .ambient-bg {
+        background:
+            radial-gradient(circle at 15% 50%, rgba(19, 91, 236, 0.15), transparent 25%),
+            radial-gradient(circle at 85% 30%, rgba(19, 91, 236, 0.1), transparent 25%);
+    }
+</style>
+
+@code {
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+    private void LaunchMailto() => Navigation.NavigateTo("/inbox");
+}

@@ -1,0 +1,79 @@
+@page "/settings/profile"
+
+<div class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-200 font-display antialiased h-full flex overflow-hidden">
+    <aside class="w-64 flex-shrink-0 bg-surface-light dark:bg-surface-dark border-r border-border-light dark:border-border-dark flex flex-col pt-6 pb-4">
+        <nav class="flex-1 px-4 space-y-1">
+            <div class="pt-2 pb-2 px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">General</div>
+            <a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" href="/inbox">
+                <span class="material-icons-round text-[20px]">inbox</span>
+                <span class="text-sm font-medium">Inbox</span>
+            </a>
+            <div class="pt-6 pb-2 px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider">Settings</div>
+            <a class="flex items-center gap-3 px-3 py-2 bg-primary/10 text-primary rounded-lg transition-colors" href="/settings/profile">
+                <span class="material-icons-round text-[20px]">person</span>
+                <span class="text-sm font-medium">Public Profile</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" href="/settings/security">
+                <span class="material-icons-round text-[20px]">security</span>
+                <span class="text-sm font-medium">Security</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col relative min-w-0 overflow-hidden bg-background-light dark:bg-background-dark">
+        <header class="h-16 flex items-center justify-between px-8 border-b border-border-light dark:border-border-dark bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md sticky top-0 z-10">
+            <div class="flex flex-col justify-center">
+                <div class="flex items-center text-xs text-slate-500 mb-0.5">
+                    <span>Settings</span>
+                    <span class="material-icons-round text-[10px] mx-1">chevron_right</span>
+                    <span>Profile</span>
+                </div>
+                <h1 class="text-lg font-bold text-slate-800 dark:text-white">Profile & Personalization</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="text-slate-500 hover:text-primary transition-colors text-sm font-medium">Discard</button>
+                <button class="bg-primary hover:bg-primary-hover text-white px-5 py-1.5 rounded-lg text-sm font-medium shadow-lg shadow-primary/20 transition-all active:scale-95">
+                    Save Changes
+                </button>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8">
+            <div class="max-w-3xl mx-auto space-y-10">
+                <section>
+                    <div class="mb-6">
+                        <h2 class="text-lg font-bold text-slate-800 dark:text-white mb-1">Public Profile</h2>
+                        <p class="text-sm text-slate-500">Manage how you appear to other team members and external contacts.</p>
+                    </div>
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl border border-border-light dark:border-border-dark p-6 shadow-soft">
+                        <div class="flex items-center gap-6 mb-8 pb-8 border-b border-border-light dark:border-border-dark">
+                            <div class="relative group">
+                                <div class="w-24 h-24 rounded-2xl overflow-hidden shadow-md ring-4 ring-white dark:ring-surface-dark">
+                                    <img alt="Large User Avatar" class="w-full h-full object-cover transition-transform group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcBFX7l30EQlkBNdX8Sg4UZyj5dNN-PAUmvO4DYYFfYJd3B9hY_HHY7ND_z0EIS5TdvM0XkosY3NQI72JnOMi0vmG-yqMrQjwM2sYV5BIIRhctt4QkSrAlHy5YHDmqA6nqO4RseayogElKga1gDCL8grMwcNxG6Y_7I5SSN2NkzhxpGDcz2jpUZoWEJZEWklqMp0wSOL53LqwcoVCc15XLWbAid64b5SXf4TZQMTKVVqkCiSzji2HS4EQzPupYO5urqlzH7v1UMkoi" />
+                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
+                                        <span class="material-icons-round text-white">camera_alt</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-800 dark:text-white text-lg">Alex Morgan</h3>
+                                <p class="text-sm text-slate-500 mb-3">alex.morgan@mailto.com</p>
+                                <div class="flex gap-3">
+                                    <button class="px-3 py-1.5 bg-white dark:bg-surface-dark border border-border-light dark:border-border-dark text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors shadow-sm">
+                                        Change Avatar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                            <div class="space-y-1.5">
+                                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider" for="display-name">Display Name</label>
+                                <input class="w-full bg-slate-50 dark:bg-background-dark border border-border-light dark:border-border-dark rounded-lg px-3 py-2 text-sm text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400" id="display-name" type="text" value="Alex Morgan" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+</div>

@@ -1,0 +1,75 @@
+@page "/admin/branding"
+@using Mailto.UI.Components
+
+<div class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 h-full flex font-display antialiased overflow-hidden">
+    <!-- Middle Sidebar (Local Context) -->
+    <aside class="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col pt-6 shrink-0 transition-all duration-300">
+        <nav class="space-y-1 w-full px-4">
+            <p class="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Admin</p>
+            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg font-medium transition-colors" href="/admin/tenants">
+                <span class="material-icons-round">settings</span>
+                <span>General</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 bg-primary/10 text-primary rounded-lg font-medium" href="/admin/branding">
+                <span class="material-icons-round">palette</span>
+                <span>Branding</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg font-medium transition-colors" href="/admin/users">
+                <span class="material-icons-round">group</span>
+                <span>Users</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden bg-white dark:bg-background-dark">
+        <header class="h-16 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 bg-white/70 dark:bg-background-dark/70 backdrop-blur-md sticky top-0 z-10">
+            <h2 class="text-xl font-bold">Branding Settings</h2>
+            <div class="flex gap-3">
+                <button class="px-4 py-1.5 text-sm font-medium rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors">Discard</button>
+                <button class="px-4 py-1.5 text-sm font-bold rounded-lg bg-primary text-white hover:opacity-90 transition-opacity">Save Changes</button>
+            </div>
+        </header>
+
+        <div class="flex-1 flex overflow-hidden">
+            <div class="w-[420px] overflow-y-auto p-8 border-r border-slate-200 dark:border-slate-800">
+                <div class="space-y-8">
+                    <section>
+                        <h3 class="text-sm font-bold mb-4">Identity</h3>
+                        <div class="space-y-4">
+                            <div class="flex flex-col gap-2">
+                                <label class="text-xs font-semibold text-slate-400">Tenant Logo</label>
+                                <div class="group relative flex items-center justify-center border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-xl p-8 hover:border-primary transition-colors cursor-pointer bg-slate-50 dark:bg-slate-900/50">
+                                    <div class="text-center">
+                                        <span class="material-icons-round text-4xl text-slate-400 group-hover:text-primary transition-colors">cloud_upload</span>
+                                        <p class="text-xs mt-2 text-slate-400">Click to upload SVG or PNG</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <label class="text-xs font-semibold text-slate-400">Tenant Name</label>
+                                <input class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-sm focus:ring-1 focus:ring-primary outline-none" type="text" value="Acme Corp" />
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <div class="flex-1 bg-slate-50 dark:bg-slate-900/30 overflow-y-auto p-12">
+                <div class="max-w-4xl mx-auto space-y-12">
+                    <div>
+                        <h4 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">Login Experience Preview</h4>
+                        <div class="relative group aspect-[16/10] bg-white dark:bg-slate-900 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-2xl">
+                            <div class="absolute inset-0 bg-cover bg-center opacity-40 blur-sm scale-110" style='background-image: url("https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&q=80&w=1000");'></div>
+                            <div class="absolute inset-0 flex items-center justify-center p-8">
+                                <div class="w-full max-w-sm bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl p-8 rounded-3xl border border-white/10 text-center">
+                                    <h3 class="text-2xl font-bold mb-2">Welcome to Mailto</h3>
+                                    <p class="text-sm text-slate-500 mb-8">Managed by Acme Corp</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

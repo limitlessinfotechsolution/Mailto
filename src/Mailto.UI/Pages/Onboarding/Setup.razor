@@ -1,0 +1,157 @@
+@page "/onboarding/setup"
+@layout Mailto.UI.Components.Layout.EmptyLayout
+
+<div class="bg-background-light dark:bg-background-dark min-h-screen flex items-center justify-center p-6 font-display antialiased">
+    <!-- Desktop Setup Assistant Window -->
+    <div class="max-w-5xl w-full aspect-[16/10] bg-white dark:bg-slate-900 shadow-2xl rounded-xl overflow-hidden flex flex-row border border-slate-200 dark:border-slate-800">
+        <!-- Sidebar Navigation -->
+        <aside class="w-72 border-r border-slate-200 dark:border-slate-800 flex flex-col p-8 select-none bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-md">
+            <!-- Window Controls -->
+            <div class="flex space-x-2 mb-10">
+                <div class="w-3.5 h-3.5 rounded-full bg-[#ff5f57]"></div>
+                <div class="w-3.5 h-3.5 rounded-full bg-[#febc2e]"></div>
+                <div class="w-3.5 h-3.5 rounded-full bg-[#28c840]"></div>
+            </div>
+            <div class="flex items-center space-x-3 mb-12 px-2">
+                <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white">
+                    <span class="material-icons-round text-2xl">mail</span>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-slate-800 dark:text-white">Mailto</span>
+            </div>
+            <!-- Progress Steps -->
+            <nav class="space-y-6">
+                <!-- Step 1: Completed -->
+                <div class="flex items-center space-x-4 group cursor-default">
+                    <div class="w-8 h-8 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary">
+                        <span class="material-icons-round text-lg">check</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-slate-500 dark:text-slate-400">Step 1</p>
+                        <p class="text-md font-semibold text-slate-700 dark:text-slate-300">Welcome</p>
+                    </div>
+                </div>
+                <!-- Step 2: Active -->
+                <div class="flex items-center space-x-4 relative">
+                    <div class="absolute -left-8 w-1 h-8 bg-primary rounded-r-full"></div>
+                    <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/30">
+                        <span class="text-sm font-bold">2</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-primary">Active</p>
+                        <p class="text-md font-semibold text-slate-900 dark:text-white">Company Info</p>
+                    </div>
+                </div>
+                <!-- Step 3: Pending -->
+                <div class="flex items-center space-x-4 opacity-50">
+                    <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500">
+                        <span class="text-sm font-bold">3</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-slate-500">Upcoming</p>
+                        <p class="text-md font-semibold text-slate-700 dark:text-slate-300">DNS Setup</p>
+                    </div>
+                </div>
+                <!-- Step 4: Pending -->
+                <div class="flex items-center space-x-4 opacity-50">
+                    <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500">
+                        <span class="text-sm font-bold">4</span>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-slate-500">Upcoming</p>
+                        <p class="text-md font-semibold text-slate-700 dark:text-slate-300">Create Admin</p>
+                    </div>
+                </div>
+            </nav>
+            <!-- Bottom Illustration Space -->
+            <div class="mt-auto pt-10">
+                <div class="rounded-xl bg-primary/5 dark:bg-primary/10 p-4 border border-primary/10">
+                    <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed italic">
+                        "Setting up your environment takes less than 5 minutes."
+                    </p>
+                </div>
+            </div>
+        </aside>
+        <!-- Content Area -->
+        <main class="flex-1 flex flex-col relative bg-white dark:bg-slate-900">
+            <!-- Breadcrumbs Header -->
+            <header class="px-12 pt-10 flex items-center justify-between">
+                <nav class="flex items-center space-x-2 text-sm font-medium text-slate-400">
+                    <span>Onboarding</span>
+                    <span class="material-icons-round text-xs">chevron_right</span>
+                    <span class="text-slate-600 dark:text-slate-300">Organization Setup</span>
+                </nav>
+                <div class="flex space-x-1">
+                    <span class="w-2 h-2 rounded-full bg-slate-200 dark:bg-slate-700"></span>
+                    <span class="w-6 h-2 rounded-full bg-primary"></span>
+                    <span class="w-2 h-2 rounded-full bg-slate-200 dark:bg-slate-700"></span>
+                    <span class="w-2 h-2 rounded-full bg-slate-200 dark:bg-slate-700"></span>
+                </div>
+            </header>
+            <!-- Form Content -->
+            <div class="flex-1 px-12 py-16 max-w-2xl">
+                <h1 class="text-4xl font-extrabold text-slate-900 dark:text-white mb-4">
+                    Tell us about your organization
+                </h1>
+                <p class="text-lg text-slate-500 dark:text-slate-400 mb-12">
+                    We'll use these details to configure your initial mail server environment and workspace branding.
+                </p>
+                <form class="space-y-8" @onsubmit="HandleSubmit">
+                    <!-- Company Name -->
+                    <div class="space-y-3">
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 tracking-wide uppercase" for="company-name">
+                            Company Name
+                        </label>
+                        <div class="relative">
+                            <input class="w-full h-14 px-5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-slate-900 dark:text-white transition-all text-lg font-medium" id="company-name" name="company-name" placeholder="e.g., Acme Corporation" type="text" @bind="companyName" />
+                        </div>
+                    </div>
+                    <!-- Primary Domain -->
+                    <div class="space-y-3">
+                        <label class="block text-sm font-bold text-slate-700 dark:text-slate-300 tracking-wide uppercase" for="domain">
+                            Primary Domain
+                        </label>
+                        <div class="relative flex">
+                            <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                                <span class="text-slate-400 material-icons-round text-xl">language</span>
+                            </div>
+                            <input class="w-full h-14 pl-14 pr-5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary text-slate-900 dark:text-white transition-all text-lg font-medium" id="domain" name="domain" placeholder="acme.com" type="text" @bind="primaryDomain" />
+                        </div>
+                        <p class="text-xs text-slate-400 dark:text-slate-500">
+                            This domain will be used for your organization's primary mail routing.
+                        </p>
+                    </div>
+                </form>
+            </div>
+            <!-- Action Footer -->
+            <footer class="p-10 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 mt-auto flex items-center justify-between">
+                <button class="flex items-center space-x-2 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-semibold transition-colors">
+                    <span class="material-icons-round">arrow_back</span>
+                    <span>Back</span>
+                </button>
+                <div class="flex items-center space-x-4">
+                    <button @onclick="HandleSubmit" class="px-8 h-12 flex items-center justify-center space-x-3 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg shadow-lg shadow-primary/20 transition-all transform active:scale-[0.98]">
+                        <span>Continue</span>
+                        <span class="material-icons-round text-xl">arrow_forward</span>
+                    </button>
+                </div>
+            </footer>
+        </main>
+    </div>
+    <!-- Background Decorative Element (Abstract Gradient) -->
+    <div class="fixed inset-0 -z-10 overflow-hidden">
+        <div class="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full bg-primary/5 blur-[120px]"></div>
+        <div class="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] rounded-full bg-primary/10 blur-[120px]"></div>
+    </div>
+</div>
+
+@code {
+    private string companyName = "";
+    private string primaryDomain = "";
+
+    [Inject] private NavigationManager Navigation { get; set; } = default!;
+
+    private void HandleSubmit()
+    {
+        Navigation.NavigateTo("/onboarding/success");
+    }
+}

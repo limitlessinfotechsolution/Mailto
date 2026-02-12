@@ -1,0 +1,64 @@
+@page "/settings/devices"
+@layout MainLayout
+
+<div class="bg-background-light dark:bg-background-dark font-display text-gray-900 dark:text-white antialiased h-screen overflow-hidden flex flex-col">
+    <main class="flex-1 h-full overflow-y-auto p-4 md:p-8 lg:px-12">
+        <div class="max-w-4xl mx-auto space-y-8">
+            <div class="flex flex-col gap-2 mb-8">
+                <h1 class="text-3xl font-bold tracking-tight">Devices & Sessions</h1>
+                <p class="text-gray-500 dark:text-gray-400">Manage the devices logged into your Mailto account. If you see a session you don't recognize, sign out immediately.</p>
+            </div>
+
+            <section>
+                <h2 class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-3 px-1">Current Session</h2>
+                <div class="bg-white dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
+                    <div class="p-5 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-slate-800 flex items-center justify-center flex-shrink-0 text-gray-600 dark:text-gray-300">
+                            <span class="material-icons-outlined text-3xl">laptop_mac</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-0.5">
+                                <h3 class="font-semibold truncate">MacBook Pro 16"</h3>
+                                <span class="px-2 py-0.5 rounded-full bg-green-500/10 text-green-600 dark:text-green-400 text-[10px] font-bold uppercase tracking-wide border border-green-500/20">Active Now</span>
+                            </div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1.5 flex-wrap">
+                                <span>San Francisco, US</span>
+                                <span class="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+                                <span class="font-mono text-xs">192.168.1.42</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex items-end justify-between mb-3 px-1">
+                    <h2 class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">Authorized Devices</h2>
+                    <span class="text-xs text-gray-500">Auto-logout in 30 days</span>
+                </div>
+                <div class="bg-white dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm divide-y divide-gray-100 dark:divide-gray-800 overflow-hidden">
+                    <div class="p-4 sm:p-5 flex items-center gap-4 group hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        <div class="w-10 h-10 rounded-lg bg-gray-100 dark:bg-slate-800 flex items-center justify-center flex-shrink-0 text-gray-500 dark:text-gray-400">
+                            <span class="material-icons-outlined text-2xl">smartphone</span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-medium truncate">iPhone 14 Pro</h3>
+                            <div class="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1.5 flex-wrap">
+                                <span>Mailto Mobile App</span>
+                                <span class="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+                                <span>Active 2h ago</span>
+                            </div>
+                        </div>
+                        <button class="flex items-center justify-center w-8 h-8 rounded-full text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"><span class="material-icons-outlined text-lg">logout</span></button>
+                    </div>
+                </div>
+            </section>
+
+            <div class="pt-4 flex flex-col items-center justify-center space-y-4">
+                <button class="w-full sm:w-auto px-8 py-3 rounded-lg border border-red-200 dark:border-red-900/50 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 font-medium transition-all flex items-center justify-center gap-2">
+                    <span class="material-icons-outlined">logout</span> Sign Out of All Other Sessions
+                </button>
+            </div>
+        </div>
+    </main>
+</div>

@@ -1,0 +1,57 @@
+@page "/admin/dns"
+@layout MainLayout
+
+<div class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-display antialiased p-8">
+    <div class="max-w-4xl mx-auto w-full space-y-8">
+        <header>
+            <h1 class="text-3xl font-bold tracking-tight">Configure DNS Records</h1>
+            <p class="text-slate-500 dark:text-slate-400 mt-2">To start sending and receiving emails securely with Mailto™, please add the following records to your DNS provider.</p>
+        </header>
+
+        <section class="space-y-4">
+            <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500">MX Records (Mail Exchange)</h2>
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead class="bg-slate-50 dark:bg-slate-800 text-slate-500 border-b border-slate-200 dark:border-slate-800">
+                        <tr>
+                            <th class="px-4 py-3 font-medium">Type</th>
+                            <th class="px-4 py-3 font-medium">Host</th>
+                            <th class="px-4 py-3 font-medium">Value / Target</th>
+                            <th class="px-4 py-3 font-medium text-right">Priority</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+                        <tr>
+                            <td class="px-4 py-4 font-mono text-xs text-primary font-bold">MX</td>
+                            <td class="px-4 py-4 font-mono text-xs">@("@")</td>
+                            <td class="px-4 py-4 font-mono text-xs">mx1.mailto-platform.com</td>
+                            <td class="px-4 py-4 text-right font-mono text-xs">10</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500">SPF Record (Sender Policy Framework)</h2>
+            <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg p-4 flex items-center justify-between group">
+                <div class="flex flex-col gap-1">
+                    <span class="text-[10px] text-slate-500 font-bold uppercase">TXT Value</span>
+                    <code class="text-xs text-slate-700 dark:text-slate-300 font-mono">v=spf1 include:spf.mailto-platform.com ~all</code>
+                </div>
+                <button class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 p-2 rounded-lg transition-all text-xs font-semibold">Copy</button>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500">DKIM Authentication</h2>
+            <div class="bg-primary/5 border border-primary/20 rounded-lg p-5 flex items-center gap-5">
+                <div class="flex-1">
+                    <h3 class="text-sm font-bold text-primary mb-1">Verifying DKIM status...</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">DNS propagation usually takes 1-5 minutes, but can sometimes take up to 24 hours.</p>
+                </div>
+                <button class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-lg text-xs font-semibold">Refresh Status</button>
+            </div>
+        </section>
+    </div>
+</div>

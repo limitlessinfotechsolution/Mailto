@@ -1,40 +1,30 @@
 ---
 name: Bug Report
-about: Create a report to help us improve
+about: Report a bug to help us improve
 title: '[BUG] '
-labels: 'bug'
+labels: bug
 assignees: ''
-
 ---
 
 **Describe the bug**
-A clear and concise description of what the bug is.
+A clear description of the bug.
 
 **To Reproduce**
-Steps to reproduce the behavior:
+Steps to reproduce:
 1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+2. Click on '...'
+3. See error
 
 **Expected behavior**
-A clear and concise description of what you expected to happen.
+What you expected to happen.
 
 **Screenshots**
-If applicable, add screenshots to help explain your problem.
+If applicable, add screenshots.
 
-**Environment (please complete the following information):**
- - OS: [e.g. Ubuntu 22.04, Windows 11, macOS 13]
- - Browser: [e.g. Chrome 120, Firefox 121]
- - Node Version: [e.g. 18.0.0]
+**Environment:**
+ - OS: [e.g. Ubuntu 22.04]
+ - Node Version: [e.g. 18.0.0] (Note: This is a .NET project, please specify .NET SDK version)
  - Docker Version: [e.g. 24.0.0]
- - MailO Version: [e.g. 1.0.0]
 
 **Additional context**
-Add any other context about the problem here.
-
-**Logs**
-If applicable, paste relevant log output:
-```
-Paste logs here
-```
+Any other context about the problem.

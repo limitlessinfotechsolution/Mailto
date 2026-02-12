@@ -1,0 +1,44 @@
+@page "/settings/signature"
+@layout MainLayout
+
+<div class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-display antialiased p-8">
+    <div class="max-w-4xl mx-auto w-full space-y-8">
+        <header class="flex justify-between items-end">
+            <div>
+                <h1 class="text-3xl font-bold tracking-tight">Email Signature</h1>
+                <p class="text-slate-500 dark:text-slate-400 mt-2">Customize the signature that appears at the end of your outgoing emails.</p>
+            </div>
+            <button class="bg-primary text-white px-6 py-2 rounded-lg font-bold shadow-soft">Save Signature</button>
+        </header>
+
+        <section class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+            <div class="flex items-center space-x-1 px-3 py-2 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
+                <button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500"><span class="material-icons-round text-lg">format_bold</span></button>
+                <button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500"><span class="material-icons-round text-lg">format_italic</span></button>
+                <button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500"><span class="material-icons-round text-lg">link</span></button>
+                <button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500"><span class="material-icons-round text-lg">image</span></button>
+            </div>
+            <div class="p-6">
+                <div class="min-h-[200px] outline-none text-slate-700 dark:text-slate-200 leading-relaxed text-sm" contenteditable="true">
+                    <p class="font-bold">Alex Morgan</p>
+                    <p class="text-slate-500">Product Designer | Mailto™</p>
+                    <p class="text-primary hover:underline">www.mailto.io</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h3 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Preview</h3>
+            <div class="bg-white dark:bg-slate-900 p-8 rounded-xl border border-slate-200 dark:border-slate-800 shadow-soft">
+                <div class="space-y-4 text-slate-400 text-xs italic">
+                    <p>[Outgoing message body...]</p>
+                    <div class="pt-4 border-t border-slate-100 dark:border-slate-800 not-italic text-slate-700 dark:text-slate-200">
+                        <p class="font-bold">Alex Morgan</p>
+                        <p class="text-slate-500">Product Designer | Mailto™</p>
+                        <p class="text-primary">www.mailto.io</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

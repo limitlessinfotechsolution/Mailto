@@ -1,0 +1,39 @@
+@page "/settings/privacy"
+
+<div class="w-full h-screen bg-[#f6f6f8] dark:bg-[#101622] text-slate-800 dark:text-slate-100 font-display flex items-center justify-center p-4 antialiased overflow-hidden">
+    <div class="w-full max-w-7xl h-[85vh] bg-white dark:bg-[#151b2b] rounded-xl shadow-2xl flex overflow-hidden border border-slate-200 dark:border-[#2a3449]">
+        <aside class="w-64 flex-shrink-0 bg-slate-50 dark:bg-[#121826]/90 border-r border-slate-200 dark:border-[#2a3449] flex flex-col pt-8 pb-4">
+            <nav class="flex-1 overflow-y-auto px-2 space-y-1">
+                <a class="flex items-center px-3 py-2 text-sm font-medium rounded-md text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-primary/10" href="/settings/profile">
+                    <span class="material-icons mr-3 text-slate-400 group-hover:text-primary text-[20px]">account_circle</span> Account
+                </a>
+                <a class="flex items-center px-3 py-2 text-sm font-medium rounded-md bg-primary text-white shadow-md" href="/settings/privacy">
+                    <span class="material-icons mr-3 text-white text-[20px]">shield</span> Data & Privacy
+                </a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto p-8 md:px-12">
+            <h1 class="text-2xl font-bold mb-1">Data Export & Privacy</h1>
+            <p class="text-sm text-slate-500 mb-10">Manage how your data is shared, stored, and exported.</p>
+
+            <div class="space-y-8 max-w-4xl">
+                <section>
+                    <div class="flex items-center mb-4 space-x-2">
+                        <span class="material-icons text-primary text-xl">file_download</span>
+                        <h2 class="text-lg font-semibold">Data Export</h2>
+                    </div>
+                    <div class="bg-white dark:bg-[#1a2234] border border-slate-200 dark:border-[#2a3449] rounded-xl p-6 shadow-sm">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div>
+                                <h3 class="text-base font-medium mb-1">Request Data Archive</h3>
+                                <p class="text-sm text-slate-500">Create a downloadable archive of your emails, contacts, and calendar events.</p>
+                            </div>
+                            <button class="bg-primary text-white px-5 py-2.5 rounded-lg text-sm font-medium">Request Archive</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+@page "/support"
+@layout MainLayout
+
+<div class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-display antialiased">
+    <header class="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-8 h-16 flex items-center justify-between">
+            <h1 class="text-xl font-bold tracking-tight">Help Center</h1>
+            <div class="flex items-center gap-4">
+                <button class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-soft">Contact Support</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow p-8">
+        <div class="max-w-4xl mx-auto space-y-12">
+            <section class="text-center py-12">
+                <h2 class="text-4xl font-extrabold tracking-tight mb-8">How can we help you?</h2>
+                <div class="relative max-w-2xl mx-auto">
+                    <span class="material-icons-round absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                    <input class="w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-800 border-none ring-1 ring-slate-200 dark:ring-slate-700 rounded-xl shadow-soft text-lg outline-none focus:ring-2 focus:ring-primary" placeholder="Search for articles, guides..." />
+                </div>
+            </section>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <a class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-soft transition-all" href="#">
+                    <span class="material-icons-round text-3xl text-primary mb-4">rocket_launch</span>
+                    <h3 class="text-lg font-bold mb-2">Getting Started</h3>
+                    <p class="text-sm text-slate-500">Everything you need to know to set up your account and initial preferences.</p>
+                </a>
+                <a class="p-6 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-soft transition-all" href="#">
+                    <span class="material-icons-round text-3xl text-primary mb-4">security</span>
+                    <h3 class="text-lg font-bold mb-2">Security & Privacy</h3>
+                    <p class="text-sm text-slate-500">Guides on 2FA, data encryption, and managing your privacy settings.</p>
+                </a>
+            </div>
+        </div>
+    </main>
+</div>

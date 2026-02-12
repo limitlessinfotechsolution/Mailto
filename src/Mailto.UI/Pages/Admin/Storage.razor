@@ -1,0 +1,42 @@
+@page "/admin/storage"
+@using Mailto.UI.Components
+
+<div class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 h-full flex font-display antialiased overflow-hidden">
+    <!-- Middle Sidebar (Local Context) -->
+    <aside class="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col pt-6 shrink-0 transition-all duration-300">
+        <nav class="space-y-1 w-full px-4">
+            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg font-medium transition-colors" href="/admin/tenants">
+                <span class="material-icons-round">dashboard</span>
+                <span>Overview</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 bg-primary/10 text-primary rounded-lg font-medium" href="/admin/storage">
+                <span class="material-icons-round">storage</span>
+                <span>Storage & Billing</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden bg-white dark:bg-background-dark">
+        <header class="h-16 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 bg-white/70 dark:bg-background-dark/70 backdrop-blur-md">
+            <h1 class="text-xl font-bold">Storage & Billing</h1>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8">
+            <div class="max-w-4xl space-y-8">
+                <section class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-soft">
+                    <h2 class="text-lg font-bold mb-4">Storage Usage</h2>
+                    <div class="space-y-4">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Total used: 780 GB</span>
+                            <span class="font-bold">78%</span>
+                        </div>
+                        <div class="h-4 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                            <div class="h-full bg-primary rounded-full" style="width: 78%"></div>
+                        </div>
+                        <p class="text-xs text-slate-400">Your organization is currently using 780 GB of 1 TB total storage.</p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+</div>

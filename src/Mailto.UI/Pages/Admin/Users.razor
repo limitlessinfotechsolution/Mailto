@@ -1,0 +1,67 @@
+@page "/admin/users"
+@using Mailto.UI.Components
+
+<div class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 h-full flex font-display antialiased overflow-hidden">
+    <!-- Middle Sidebar (Local Context) -->
+    <aside class="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex flex-col pt-6 shrink-0 transition-all duration-300">
+        <nav class="space-y-1 w-full px-4">
+            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg font-medium transition-colors" href="/admin/tenants">
+                <span class="material-icons-round">dashboard</span>
+                <span>Overview</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 bg-primary/10 text-primary rounded-lg font-medium" href="/admin/users">
+                <span class="material-icons-round">group</span>
+                <span>Users</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg font-medium transition-colors" href="/admin/branding">
+                <span class="material-icons-round">palette</span>
+                <span>Branding</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col overflow-hidden bg-white dark:bg-background-dark">
+        <header class="h-16 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-8 bg-white/70 dark:bg-background-dark/70 backdrop-blur-md sticky top-0 z-10">
+            <h1 class="text-xl font-bold">User Management</h1>
+            <button class="bg-primary hover:bg-primary/90 text-white px-5 py-2 rounded-lg font-semibold flex items-center gap-2 transition-all shadow-lg shadow-primary/20 text-sm">
+                <span class="material-icons-round text-lg">add</span>
+                <span>Create User</span>
+            </button>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-8">
+            <div class="bg-white dark:bg-slate-900/50 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-soft">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 text-xs font-bold uppercase tracking-wider">
+                            <th class="px-6 py-4">User</th>
+                            <th class="px-6 py-4">Role</th>
+                            <th class="px-6 py-4 text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-slate-200 overflow-hidden">
+                                        <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPz7T-cwW85RGVcbzp0i0bZd-LWrQUYXlAakzpDIJTAcd051XIWTpK78jFLbiD7weALeqogKlD8eINEd5JiT3bZibtig3XDacsuhMMu3nY6jiFk1zYlvt0HxV1tJ-qyTSdPqSkj_4dufw3avGcFUjoyfIq4xmgsnTvNVnGkqwPugctqvgJevLDGmHBSN8Z2PoYmCEtaaBWqRrPZrai0SMjQN8zCCMp4CCAMmgrkVxPgHlX4Yc1DXOLNkvS45LEVyY82mOQmVh6ozW-" />
+                                    </div>
+                                    <div>
+                                        <div class="font-bold text-slate-900 dark:text-slate-100">Alex Morgan</div>
+                                        <div class="text-xs text-slate-500">alex.morgan@mailto.com</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-0.5 rounded-full text-[11px] font-bold bg-primary/10 text-primary">Admin</span>
+                            </td>
+                            <td class="px-6 py-4 text-right">
+                                <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg text-slate-500"><span class="material-icons-round text-lg">edit</span></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>

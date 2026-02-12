@@ -1,0 +1,47 @@
+@page "/notifications"
+@layout MainLayout
+
+<div class="bg-background-light dark:bg-background-dark text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-display antialiased p-8">
+    <div class="max-w-4xl mx-auto w-full space-y-6">
+        <header class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl font-bold tracking-tight">Notifications</h1>
+            <button class="text-sm font-bold text-primary hover:underline">Mark all as read</button>
+        </header>
+
+        <div class="space-y-4">
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest px-1">Today</h3>
+
+            <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm flex gap-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer relative group">
+                <div class="absolute left-1 top-4 bottom-4 w-1 bg-primary rounded-full"></div>
+                <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500 shrink-0">
+                    <span class="material-icons-round">shield</span>
+                </div>
+                <div class="flex-1">
+                    <div class="flex justify-between items-start mb-1">
+                        <h4 class="font-bold text-sm">Suspicious Login Attempt</h4>
+                        <span class="text-[11px] text-slate-400 font-medium">2m ago</span>
+                    </div>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">We detected a login from a new IP address in Berlin, DE. Is this you?</p>
+                    <div class="mt-3 flex gap-2">
+                        <button class="px-3 py-1 bg-red-500 text-white text-xs font-bold rounded-lg">Block Access</button>
+                        <button class="px-3 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200 text-xs font-bold rounded-lg">It was me</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 shadow-sm flex gap-4 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer relative">
+                <div class="absolute left-1 top-4 bottom-4 w-1 bg-primary rounded-full"></div>
+                <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                    <span class="material-icons-round">dns</span>
+                </div>
+                <div class="flex-1">
+                    <div class="flex justify-between items-start mb-1">
+                        <h4 class="font-bold text-sm">Maintenance Scheduled</h4>
+                        <span class="text-[11px] text-slate-400 font-medium">1h ago</span>
+                    </div>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">Mailto will undergo scheduled maintenance on Saturday at 02:00 AM UTC.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
