@@ -1,0 +1,34 @@
+@using Mailto.Core.Entities
+
+<div class="mail-list">
+    @foreach (var email in Emails)
+    {
+        <div class="mail-item" @onclick="() => OnEmailSelected.InvokeAsync(email)">
+            <div class="subject">@email.Subject</div>
+            <div class="from">@email.From</div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public List<EmailMessage> Emails { get; set; }
+    [Parameter] public EventCallback<EmailMessage> OnEmailSelected { get; set; }
+}
+
+<style>
+    .mail-item {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+    }
+    .mail-item:hover {
+        background-color: #f9f9f9;
+    }
+    .subject {
+        font-weight: bold;
+    }
+    .from {
+        font-size: 0.9rem;
+        color: #666;
+    }
+</style>

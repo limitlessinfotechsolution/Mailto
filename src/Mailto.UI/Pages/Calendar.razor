@@ -1,0 +1,39 @@
+@page "/calendar"
+@using Mailto.UI.Components
+
+<div class="mail-container">
+    <Sidebar />
+    <div class="content-panel">
+        <h1>Calendar</h1>
+        <div class="calendar-grid">
+            <!-- Simplified Calendar Grid -->
+            @for (int i = 1; i <= 31; i++)
+            {
+                <div class="calendar-day">@i</div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .mail-container {
+        display: flex;
+        height: 100vh;
+    }
+    .content-panel {
+        flex: 1;
+        padding: 20px;
+        background-color: white;
+    }
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+    }
+    .calendar-day {
+        border: 1px solid #eee;
+        height: 100px;
+        padding: 5px;
+        border-radius: 8px;
+    }
+</style>

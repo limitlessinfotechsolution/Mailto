@@ -1,0 +1,6 @@
+@Mailto.Api_HostAddress = http://localhost:5187
+
+GET {{Mailto.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

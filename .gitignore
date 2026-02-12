@@ -1,8 +1,31 @@
-node_modules
+# .NET
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# Rider
+.idea/
+
+# Environment Variables
 .env
-dist
-coverage
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Operating System Files
 .DS_Store
-.idea
-.vscode
+Thumbs.db
+
+# Logs
 *.log
+
+# Legacy
+node_modules/
+dist/
+coverage/

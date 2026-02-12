@@ -1,0 +1,27 @@
+@using Mailto.Core.Entities
+
+<div class="mail-viewer">
+    <h2>@Email.Subject</h2>
+    <div class="meta">From: @Email.From</div>
+    <hr />
+    <div class="body">
+        @Email.Body
+    </div>
+</div>
+
+@code {
+    [Parameter] public EmailMessage Email { get; set; }
+}
+
+<style>
+    .mail-viewer h2 {
+        margin-top: 0;
+    }
+    .meta {
+        color: #666;
+        margin-bottom: 10px;
+    }
+    .body {
+        line-height: 1.6;
+    }
+</style>

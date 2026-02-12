@@ -1,0 +1,29 @@
+@page "/contacts"
+@using Mailto.UI.Components
+
+<div class="mail-container">
+    <Sidebar />
+    <div class="content-panel">
+        <h1>Contacts</h1>
+        <div class="contact-list">
+            <div class="contact-item">John Doe (john@example.com)</div>
+            <div class="contact-item">Jane Smith (jane@example.com)</div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .mail-container {
+        display: flex;
+        height: 100vh;
+    }
+    .content-panel {
+        flex: 1;
+        padding: 20px;
+        background-color: white;
+    }
+    .contact-item {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+</style>

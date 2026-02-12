@@ -1,0 +1,65 @@
+@page "/inbox"
+@page "/"
+@using Mailto.Core.Entities
+@using Mailto.UI.Components
+
+<div class="mail-container">
+    <Sidebar />
+    <div class="mail-list-panel">
+        <MailList Emails="@emails" OnEmailSelected="HandleEmailSelected" />
+    </div>
+    <div class="mail-viewer-panel">
+        @if (selectedEmail != null)
+        {
+            <MailViewer Email="@selectedEmail" />
+        }
+        else
+        {
+            <div class="empty-state">Select an email to read</div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<EmailMessage> emails = new();
+    private EmailMessage selectedEmail;
+
+    protected override void OnInitialized()
+    {
+        // Mock data for initial UI check
+        emails = new List<EmailMessage>
+        {
+            new EmailMessage { Subject = "Welcome to Mailto", From = "support@mailto.com", Body = "Hello and welcome!" },
+            new EmailMessage { Subject = "Feature Update", From = "updates@mailto.com", Body = "We have new features." }
+        };
+    }
+
+    private void HandleEmailSelected(EmailMessage email)
+    {
+        selectedEmail = email;
+    }
+}
+
+<style>
+    .mail-container {
+        display: flex;
+        height: 100vh;
+    }
+    .mail-list-panel {
+        width: 300px;
+        border-right: 1px solid #ddd;
+        overflow-y: auto;
+    }
+    .mail-viewer-panel {
+        flex: 1;
+        padding: 20px;
+        background-color: white;
+    }
+    .empty-state {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        color: #999;
+    }
+</style>
